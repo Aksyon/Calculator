@@ -1,0 +1,27 @@
+class Calculator:
+    
+    def __init__(self, limit):
+        self.__limit = limit
+
+    def add_record(amount, comment, date):
+        
+
+    def get_today_stats():
+
+    def get_week_stats():
+
+class Records():
+    
+    def amount(self, amount):
+        self.amount = amount
+
+    date()
+
+    comment()
+
+
+class CaloriesCalculator(Calculator):
+
+
+
+class CashCalculator(Calculator):
