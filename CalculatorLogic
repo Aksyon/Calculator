@@ -5,25 +5,55 @@ class Calculator:
     
     def add_record(record):
         records = records + record
+
+        amount = amount.append(record[0])
+
+        comment = comment.append(record[1])
+        
+        date = date.append(record[2])
+
+
+
         return records.Record()
     
     def get_today_stats():
-        pass
+        pass #dayStats
 
     def get_week_stats():
         pass
+    
+    records =[]
 
+class Records():
+        
+        amount = []
 
-    class Records():
-        records = ()
+        comment = ['']
+
+        date = []
 
 class CashCalculator(Calculator):
     def __init__(self, limit):
         super().__init__(limit)
+
+    def get_today_cash_remained(currency):
+        N = limit - dayStats
+        if dayStats < limit:
+            return f'На сегодня осталось {N} {currency} :)'
+        elif dayStats == limit:
+            return 'Денег нет, держись :/'
+        else:
+            return f'Денег нет, держись. Твой долг {N} {currency}'
 
 
 class CaloriesCalculator(Calculator):
     def __init__(self, limit):
         super().__init__(limit)
 
+    def get_calories_remained():
+        N = limit - dayStats
+        if dayStats < limit:
+            return f'Сегодня можно съесть еще что-нибудь, но с общей каллорийностью не более {N} кКал :)'
+        else:
+            return 'Хватит есть! :/'
 
