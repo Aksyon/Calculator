@@ -1,30 +1,26 @@
 import datetime as dt
-from typing_extensions import Self
 
 dt.datetime.today()
 
 class Calculator:
     
     def __init__(self, limit):
-        self.__limit = limit
+       
+        self.limit = limit
         self.records = []
         self.dayStats = 0
         self.weekStats = 0
-        if self.date == None:
-            self.date = dt.datetime.today()
-
+        
     def add_record(self, records):
         
         self.records.append(records)        
-       
         return records
 
     def get_today_stats(self):
-        day = dt.datetime.strptime(self.date, '%d.%m.%Y').date
+        
         if self.date == dt.datetime.today():
             dayStats = dayStats + self.amount
-        
-        print(dayStats)
+        return dayStats
                 
     def get_week_stats():
         pass
@@ -35,6 +31,11 @@ class Records(Calculator):
         self.amount = amount
         self.comment = comment
         self.date = date
+
+        if date == None:
+            self.date = dt.datetime.today()
+        
+        self.date = dt.datetime.strptime(date, '%d.%m.%Y').date()
 
 class CashCalculator(Calculator):
     
@@ -66,4 +67,4 @@ cash.add_record(Records(amount = 500, comment = 'продукты', date = '08.0
 
 cash.add_record(Records(amount = 2000, comment = 'йога', date = '08.03.22'))
 
-cash.get_today_stats(self)
+print(cash.get_today_stats())

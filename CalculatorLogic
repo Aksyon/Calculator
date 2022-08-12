@@ -18,7 +18,7 @@ class Calculator:
 
     def get_today_stats(records):
         
-        if self.date == dt.datetime.today():
+        if date == dt.datetime.today():
                 dayStats = dayStats + amount
         return dayStats
                 
