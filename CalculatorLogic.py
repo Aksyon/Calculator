@@ -11,10 +11,10 @@ class Records:
         self.comment = comment
                 
         if date == None:
-            date = dt.datetime.today()
+            self.date = dt.datetime.today().date()
         else:
-            date = dt.datetime.strptime(date, '%d.%m.%Y').date()
-        self.date = date
+            self.date = dt.datetime.strptime(date, '%d.%m.%Y').date()
+        
         
 class Calculator():
     
@@ -22,57 +22,59 @@ class Calculator():
        
         self.limit = limit
         self.records = []
-        self.dayStats = 0
-        self.weekStats = 0
+        self.dayStats = []
+        self.weekStats = []
         
-    def add_record(self, records):
+    def add_record(self, record):
         
-       self.records.append(records)        
-       return records
+       self.records.append(record)        
+       return self.records
 
-    def get_today_stats():
-        
-        date = Records.date
-       
-        if date == dt.datetime.today():
-            dayStats = dayStats + amount
-            return dayStats
+    def get_today_stats(self):
+        for record in self.records:
+            if record.date == today:
+                self.dayStats.append(record.amount)
+        return sum(self.dayStats)
                 
-    def get_week_stats():
-       
-        if day_week_ago < day < today:
-            weekStats = weekStats + amount
-            return weekStats 
+    def get_week_stats(self):
+        for record in self.records:
+            if day_week_ago <= record.date < today:
+                self.weekStats.append(record.amount)
+        return sum(self.weekStats)
      
 class CashCalculator(Calculator):
     
-    def __init__(self, limit, usd_rate = 62.25, euro_rate = 63.88):
+    def __init__(self, limit):
         
         Calculator.__init__(self, limit)
-        self.usd_rate = usd_rate
-        self.euro_rate = euro_rate
+        self.usd_rate = 62.25
+        self.euro_rate = 63.88
+                
+    def get_today_cash_remained(self, currency):
+        limit = self.limit
+        dayStatsSum = Calculator.get_today_stats(self)     # WTF? become 2 times more
+        print(dayStatsSum)
+        dif = limit - dayStatsSum
         
-    def get_today_cash_remained(currency):
-        
-        N = limit - dayStats
-
-        if currency == 'USD':
-            N = N * usd_rate
+        if currency == 'USD':              #converting currency to 'RUB'
+            N = dif * self.usd_rate
         elif currency == 'EURO':
-            N = N * euro_rate
-
-        if dayStats < limit:
+            N = dif * self.euro_rate
+        elif currency == 'RUB':
+            N = dif
+        
+        if dayStatsSum < limit:
             return f'На сегодня осталось {N} рублей :)'
-        elif dayStats == limit:
-            return 'Денег нет, держись :/'
+        elif dayStatsSum == limit:
+            return 'Денег нет, но вы держитесь :/'
         else:
-            return f'Денег нет, держись. Твой долг {N} рублей'
-
+            return f'Денег нет, но вы держитесь. Долг {N} рублей'
+        
 class CaloriesCalculator(Calculator):
         
     def get_calories_remained():
         
-        dayStats = Calculator.get_today_stats
+        dayStats = Calculator.get_today_stats()
         limit = Calculator.limit
         N = limit - dayStats
         if dayStats < limit:
@@ -80,12 +82,13 @@ class CaloriesCalculator(Calculator):
         else:
             return 'Хватит есть! :/'
    
-cash = CashCalculator(5000)
+cash = CashCalculator(1000)
 
-cash.add_record(Records(amount = 1500, comment = 'кафе', date = '08.03.2022'))
+cash.add_record(Records(amount = 250, comment = 'кафе', date = '14.08.2022'))
 
-cash.add_record(Records(amount = 500, comment = 'продукты', date = '08.03.2022'))
+#cash.add_record(Records(amount = 50, comment = 'продукты', date = '14.08.2022'))
 
-cash.add_record(Records(amount = 2000, comment = 'йога', date = '08.03.2022'))
+#cash.add_record(Records(amount = 50, comment = 'йога', date = '14.08.2022'))
 
-print(Calculator.get_today_stats())
+print(Calculator.get_today_stats(cash))
+print(cash.get_today_cash_remained('RUB'))
