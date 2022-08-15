@@ -1,10 +1,14 @@
+"""This module give us possibility to make calculations of
+of cash remained and also calories remained """
+
 import datetime as dt
 
 today = dt.datetime.today().date()
 day_week_ago = today - dt.timedelta(days=6)
 
+
 class Records:
-    
+    """Class for saving the records"""
     
     def __init__(self, amount, comment, date):
         self.amount = amount
@@ -14,9 +18,9 @@ class Records:
         else:
             self.date = dt.datetime.strptime(date, '%d.%m.%Y').date()
         
-        
+
 class Calculator():
-    
+    """Class with main logic of calculation"""
     
     def __init__(self, limit):
         self.limit = limit
@@ -25,28 +29,33 @@ class Calculator():
         self.weekStats = []
         
     def add_record(self, record):
-       self.records.append(record)        
-       return self.records
+        """Function for addiing the records in list"""
+        self.records.append(record)        
+        return self.records
 
     def get_today_stats(self):
+        """Function for getting the statistics for the whole that day"""
         for record in self.records:
             if record.date == today:
                 self.dayStats.append(record.amount)
         return sum(self.dayStats)
                 
     def get_week_stats(self):
+        """Function for getting the statistics for previous week"""
         for record in self.records:
             if day_week_ago <= record.date < today:
                 self.weekStats.append(record.amount)
         return sum(self.weekStats)
      
+     
 class CashCalculator(Calculator):
-    
+    """Class with functions for cash statistics"""
 
     usd_rate = 62.25
     euro_rate = 63.88
                 
     def get_today_cash_remained(self, currency):
+        """Function for calculation of your cash balance at this moment"""
         limit = self.limit
         dayStatsSum = self.get_today_stats()  
         difference = limit - dayStatsSum
@@ -66,10 +75,10 @@ class CashCalculator(Calculator):
             return f'Денег нет, но вы держитесь. Долг {N} рублей'
         
 class CaloriesCalculator(Calculator):
-
+    """Class with functions for calories statistics"""
 
     def get_calories_remained(self):
-        
+        """Function for calculation your calories balance at this moment"""
         dayStats = self.get_today_stats()
         limit = self.limit
         N = limit - dayStats
