@@ -1,105 +1,100 @@
 """This module give us possibility to make calculations of
-of cash remained and also calories remained """
+of cash remained and also calories remained."""
 
 import datetime as dt
-FORMAT = '%d.%m.%Y'
 
+DATE_FORMAT = '%d.%m.%Y'
 
 class Records():
-    """Class for saving the records"""
-    
-    def __init__(self, amount, comment, date):
-        self.amount = float(amount)
-        self.comment = str(comment)     
+    """Class for saving the records."""
+
+    def __init__(self, amount: float, comment: str, date: str) -> str:
+        self.amount = amount
+        self.comment = comment   
         if date is None:
             self.date = dt.datetime.today().date()
         else:
-            self.date = dt.datetime.strptime(date, FORMAT).date()
+            self.date = dt.datetime.strptime(date, DATE_FORMAT).date()
         
 
 class Calculator():
-    """Class with main logic of calculation"""
+    """Class with main logic of calculation."""
     
-    def __init__(self, limit):
-        self.limit = int(limit)
+    def __init__(self, limit: float) -> None:
+        self.limit = limit
         self.records = []
-        self.dayStats = []
-        self.ad = 0
 
-    def add_record(self, record):
-        """Function for addiing the records in list"""
+    def add_record(self, record: str) -> str:
+        """Function for addiing the records in list."""
         self.records.append(record)        
-        return self.records
 
-    def get_today_stats(self):
-        """Function for getting the statistics for the whole this day"""
-        composeDayStats = [amount for amount in self.records if amount.date ==
-                          dt.datetime.today().date()]
-        return sum(composeDayStats)
+    def get_today_stats(self) -> int:
+        """Function for getting the statistics for the whole this day."""
+        today = dt.datetime.today().date()
+        return sum(record.amount for record in self.records if record.date == today)
 
-    def get_week_stats(self):
-        """Function for getting the statistics for previous week"""
+    def get_week_stats(self) -> int:
+        """Function for getting the statistics for previous week."""
         today = dt.datetime.today().date()
         day_week_ago = today - dt.timedelta(days=6)
-        composeWeekStats = [amount for amount in self.records if day_week_ago 
-                           <= amount.date < today]
-        return sum(composeWeekStats)
+        return sum(amount for amount in self.records if day_week_ago 
+                   <= amount.date < today)
 
-    def getDifference(self):
-        getDaySum = self.get_today_stats()
-        isDifference = self.limit - getDaySum
-        return isDifference
+    def getDifference(self) -> int:
+        return self.limit - self.get_today_stats()
     
 
 class CashCalculator(Calculator):
-    """Class with functions for cash statistics"""
-    CURRENCY = {'USD_RUB' : [62.25, 'в рублях'],
-                'EURO_RUB' : [63.88, 'в рублях'],
-                'USD_EURO' : [1, 'в евро'],
-                'EURO_USD' : [1, 'в долларах'],
-                'RUB' : [1, 'в рублях']
-    }
+    """Class with functions for cash statistics."""
+    CURRENCY = {'USD' : (62.25, 'в рублях'),
+                'EURO' : (63.88, 'в рублях'),
+                'CNY' : (8.67, 'в рублях'),
+                'KZT' : (0.13, 'в рублях'), 
+                'RUB' : (1, 'в рублях')
+}
     CASH_BALANCE_PLUS = 'На сегодня осталось {currency_name}: {balance}'
     CASH_BALANCE_MINUS = ('Денег нет, но вы держитесь. Долг {currency_name}: '
                          '{balance}')
     CASH_BALANCE_ZERO = 'Денег нет, но вы держитесь :/'
-    
-    def get_today_cash_remained(self, currency):
-        """Function for calculation of your cash balance at this moment"""
-        isDifference = self.getDifference()
-        getRate = self.CURRENCY[currency]
-        getCashRemained = isDifference * getRate[0]
-      
-        if getCashRemained != 0:
-            if getCashRemained > 0:
-                return self.CASH_BALANCE_PLUS.format(
-                    currency_name = getRate[1], balance=getCashRemained)
-            return self.CASH_BALANCE_MINUS.format(
-                currency_name = getRate[1], balance=getCashRemained)
-        if getCashRemained == 0:
+
+    def get_today_cash_remained(self, currency: str = 'RUB') -> str:
+        """Function for calculation of your cash balance at this moment."""               
+        try:
+            get_rate = self.CURRENCY[currency]
+        except KeyError:
+            raise KeyError(f'Вы ввели не поддерживаемую валюту: {currency}')
+
+        get_cash_remained = self.getDifference() * get_rate[0]
+        
+        if self.getDifference() == 0:
             return self.CASH_BALANCE_ZERO
+
+        if self.getDifference() > 0:
+            return self.CASH_BALANCE_PLUS.format(currency_name =
+                    get_rate[1], balance=get_cash_remained)
+        return self.CASH_BALANCE_MINUS.format(
+            currency_name = get_rate[1], balance=get_cash_remained)
 
         
 class CaloriesCalculator(Calculator):
-    """Class with functions for calories statistics"""
+    """Class with functions for calories statistics."""
     CALORIES_BALANCE = ('Сегодня можно съесть еще что-нибудь, но с общей'
                        'каллорийностью не более {balance} кКал :)')
     STOP_EATING = 'Хватит есть! :/'
 
-    def get_calories_remained(self):
-        """Function for calculation your calories balance at this moment"""
-        isDifference = self.getDifference()        
-        if isDifference > 0:
-            return self.CALORIES_BALANCE.format(balance=isDifference)
+    def get_calories_remained(self) -> str:
+        """Function for calculation your calories balance at this moment."""
+        if self.getDifference() > 0:
+            return self.CALORIES_BALANCE.format(balance=self.getDifference())
         return self.STOP_EATING
 
 if __name__ == '__main__':
 
     cash = CashCalculator(500)
 
-    cash.add_record(Records(amount = 500,
+    cash.add_record(Records(amount = 650,
                            comment = 'кафе',
-                           date = '22.08.2022'))
+                           date = '25.08.2022'))
 
     cash.add_record(Records(amount = 50,
                            comment = 'продукты',
@@ -109,4 +104,4 @@ if __name__ == '__main__':
                            comment = 'йога',
                            date = '20.08.2022'))
        
-    print(cash.get_today_cash_remained('USD_EURO'))
+    print(cash.get_today_cash_remained('USD'))
