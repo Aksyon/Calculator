@@ -40,7 +40,7 @@ class Calculator():
         return sum(amount for amount in self.records if day_week_ago 
                    <= amount.date < today)
 
-    def getDifference(self) -> int:
+    def get_difference(self) -> int:
         return self.limit - self.get_today_stats()
     
 
@@ -64,12 +64,12 @@ class CashCalculator(Calculator):
         except KeyError:
             raise KeyError(f'Вы ввели не поддерживаемую валюту: {currency}')
 
-        get_cash_remained = self.getDifference() * get_rate[0]
+        get_cash_remained = self.get_difference() * get_rate[0]
         
-        if self.getDifference() == 0:
+        if self.get_difference() == 0:
             return self.CASH_BALANCE_ZERO
 
-        if self.getDifference() > 0:
+        if self.get_difference() > 0:
             return self.CASH_BALANCE_PLUS.format(currency_name =
                     get_rate[1], balance=get_cash_remained)
         return self.CASH_BALANCE_MINUS.format(
@@ -84,8 +84,8 @@ class CaloriesCalculator(Calculator):
 
     def get_calories_remained(self) -> str:
         """Function for calculation your calories balance at this moment."""
-        if self.getDifference() > 0:
-            return self.CALORIES_BALANCE.format(balance=self.getDifference())
+        if self.get_difference() > 0:
+            return self.CALORIES_BALANCE.format(balance=self.get_difference())
         return self.STOP_EATING
 
 if __name__ == '__main__':
