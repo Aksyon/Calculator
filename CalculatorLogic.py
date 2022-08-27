@@ -1,4 +1,4 @@
-'''
+```
 """This module give us possibility to make calculations of
 of cash remained and also calories remained."""
 
@@ -113,4 +113,4 @@ if __name__ == '__main__':
                            date = '20.08.2022'))
        
     print(cash.get_today_cash_remained('USD'))
-'''
+```
