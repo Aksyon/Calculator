@@ -13,6 +13,20 @@ Day and week statistics are available in both of calculators.
 
 Inheritance is the main OOP technolodgy that used in these modules.
 
+Author: https://github.com/Aksyon 
+
+How to start program:
+1) Import module CalculatorLogic
+2) Create object by using <object name> = <calculator_name>(limit), 
+where calculator_name is CashCalculator or CaloriesCalculator
+3) Add some records by using:
+    <objecct name>.add_record(Records(amount = .., comment = '..', date = '..')),
+    if the record about today, it is allowed to skip the date.
+4) Available methods are:
+get_today_cash_remained('currency'),
+get_calories_remained,
+get_week_stats.
+
 Copyright (C) <2022>  <Aleksandr Aksyonov>
 
     This program is free software: you can redistribute it and/or modify
@@ -27,15 +41,3 @@ Copyright (C) <2022>  <Aleksandr Aksyonov>
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-How to start program:
-1) Import module CalculatorLogic
-2) Create object by using <object name> = <calculator_name>(limit), 
-where calculator_name is CashCalculator or CaloriesCalculator
-3) Add some records by using:
-    <objecct name>.add_record(Records(amount = .., comment = '..', date = '..')),
-    if the record about today, it is allowed to skip the date.
-4) Available methods are:
-get_today_cash_remained('currency'),
-get_calories_remained,
-get_week_stats.
